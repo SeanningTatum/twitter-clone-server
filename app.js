@@ -4,8 +4,10 @@ const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
+
 // Routes
 const index = require ('./routes/index');
+const user = require('./routes/user');
 
 // Database
 app.use(function(req, res, next){
@@ -27,6 +29,7 @@ app.use(logger('dev'));
 
 // configure routes
 app.use('/', index);
+app.use('/user', user);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
