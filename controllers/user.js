@@ -8,12 +8,14 @@
  * @param {*} req
  */
 exports.createUser = (req, res, next) => {
-   console.log(res);
+   console.log(req.body);
    const query = `
       INSERT INTO users (user_ID, name, handle, password) 
-      VALUES ('null', '${res.body.name}', '${res.body.handle}', '${res.body.password}');
+      VALUES ('null', '${req.body.name}', '${req.body.handle}', '${req.body.password}');
    `
    res.locals.connection.query(query, (error, results, fields) => {
+      if (error) res.send(error);
+
       res.send("inserted!");
    });
 }
