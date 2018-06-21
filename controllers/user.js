@@ -1,6 +1,3 @@
-
-
-
 /** 
  * This function creates a user
  * hashes the password then saves 

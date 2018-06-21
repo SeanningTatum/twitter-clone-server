@@ -1,38 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const tweetsController = require('../controllers/tweets');
 
 // GET Tweets
-router.get('/', (req, res, next) => {
-  const query = 'SELECT * from tweets';
+router.get('/', tweetsController.getTweets);
 
-  res.locals.connection.query(query, (error, results, fields) => {
-    if (error) return res.status(500);
-    
-    res.status(200);
-    res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-	});
-});
-
-/**
- * POST method for ('/');
- * @param {message: string}
- */
-router.post('/', (req, res, next) => {
-  console.log(req.body);
-  date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-  const query = `
-      INSERT INTO tweets (name, handlerName, message, date, tweet_ID) 
-      VALUES ('test', 'test', '${req.body.message}', '${date}', NULL)
-    `;
-  
-  res.locals.connection.query(query, (error, results, fields) => {
-    if (error) return res.status(500);
-    
-    res.status(200);
-    res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-	})
-  
-});
+// Post a tweet
+router.post('/', tweetsController.postTweet);
 
 module.exports = router;
