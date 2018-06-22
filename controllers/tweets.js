@@ -1,3 +1,5 @@
+
+// This function retreives tweets based on followers
 exports.getTweets = (req, res, next) => {
    const query = 'SELECT * from tweets';
 
@@ -9,6 +11,7 @@ exports.getTweets = (req, res, next) => {
     });
 }
 
+// This function posts tweets
 exports.postTweet = (req, res, next) => {
    console.log(req.body);
    date = new Date().toISOString().slice(0, 19).replace('T', ' ');
