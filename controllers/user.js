@@ -31,11 +31,8 @@ exports.validateUser = (req, res, next) => {
       if (error) res.send(error);
 
       if(results.length === 0) {
-         return (
-            res.status(403)
-               .send({status: 403, message: "Invalid email or password"})
-         );
-         
+         return res.status(403)
+                  .send({status: 403, message: "Invalid email or password"});  
       }
 
       return res.status(200).send({results: results});
