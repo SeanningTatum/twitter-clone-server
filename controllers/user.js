@@ -1,3 +1,4 @@
+const mysql = require("mysql");
 /** 
  * This function creates a user
  * hashes the password then saves 
@@ -11,19 +12,32 @@ exports.createUser = (req, res, next) => {
       VALUES ('null','${req.body.email}', '${req.body.name}', '${req.body.handle}', '${req.body.password}');
    `
    res.locals.connection.query(query, (error, results, fields) => {
-      if (error) res.send(error);
+      if (error) return res.send(error);
 
-      res.send("inserted!");
+      return res.send("inserted!");
    });
 }
 
 exports.validateUser = (req, res, next) => {
+   console.log(req.body);
    const query = `
-      SELECT * from users WHERE email = ${req.body.email}
+      SELECT * from users 
+      WHERE 
+      password = ${mysql.escape(req.body.password)}
+      AND
+      email = ${mysql.escape(req.body.email)} 
    `
    res.locals.connection.query(query, (error, results, fields) => {
       if (error) res.send(error);
 
-      res.status(200).send({results: results});
+      if(results.length === 0) {
+         return (
+            res.status(403)
+               .send({status: 403, message: "Invalid email or password"})
+         );
+         
+      }
+
+      return res.status(200).send({results: results});
    })
 }
