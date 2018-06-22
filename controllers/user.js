@@ -1,20 +1,27 @@
 const mysql = require("mysql");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+
 /** 
  * This function creates a user
  * hashes the password then saves 
  * user in database
  */
 exports.createUser = (req, res, next) => {
-   console.log(req.body);
-   const query = `
-      INSERT INTO users (user_ID, email, name, handle, password) 
-      VALUES ('null','${req.body.email}', '${req.body.name}', '${req.body.handle}', '${req.body.password}');
-   `
-   res.locals.connection.query(query, (error, results, fields) => {
-      if (error) return res.send(error);
+   bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+      const query = `
+         INSERT INTO users (user_ID, email, name, handle, password) 
+         VALUES ('null','${req.body.email}', '${req.body.name}', '${req.body.handle}', '${hash}');
+      `
+      res.locals.connection.query(query, (error, results, fields) => {
+         if (error) return res.send(error);
 
-      return res.send("inserted!");
-   });
+         return res.status(200)
+            .send("Success");
+      });
+   })
+   
 }
 
 exports.validateUser = (req, res, next) => {
@@ -31,7 +38,7 @@ exports.validateUser = (req, res, next) => {
 
       if(results.length === 0) {
          return res.status(403)
-                  .send({status: 403, message: "Invalid email or password"});  
+            .send({status: 403, message: "Invalid email or password"});  
       }
 
       return res.status(200).send({results: results});
